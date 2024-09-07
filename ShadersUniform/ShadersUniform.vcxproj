@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{b2a82a9c-5f95-4971-b868-d52bdcac061e}</ProjectGuid>
-    <RootNamespace>HelloTriangle</RootNamespace>
+    <ProjectGuid>{46b8b0ae-06c5-4bf6-8e29-47c026c6fe53}</ProjectGuid>
+    <RootNamespace>ShadersUniform</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
