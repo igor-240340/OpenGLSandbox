@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HelloTriangleIndexed", "Hel
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ShadersUniform", "ShadersUniform\ShadersUniform.vcxproj", "{46B8B0AE-06C5-4BF6-8E29-47C026C6FE53}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ShadersInterpolation", "ShadersInterpolation\ShadersInterpolation.vcxproj", "{441B9400-DB81-4DCE-968D-C2A96679C7E8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -51,6 +53,14 @@ Global
 		{46B8B0AE-06C5-4BF6-8E29-47C026C6FE53}.Release|x64.Build.0 = Release|x64
 		{46B8B0AE-06C5-4BF6-8E29-47C026C6FE53}.Release|x86.ActiveCfg = Release|Win32
 		{46B8B0AE-06C5-4BF6-8E29-47C026C6FE53}.Release|x86.Build.0 = Release|Win32
+		{441B9400-DB81-4DCE-968D-C2A96679C7E8}.Debug|x64.ActiveCfg = Debug|x64
+		{441B9400-DB81-4DCE-968D-C2A96679C7E8}.Debug|x64.Build.0 = Debug|x64
+		{441B9400-DB81-4DCE-968D-C2A96679C7E8}.Debug|x86.ActiveCfg = Debug|Win32
+		{441B9400-DB81-4DCE-968D-C2A96679C7E8}.Debug|x86.Build.0 = Debug|Win32
+		{441B9400-DB81-4DCE-968D-C2A96679C7E8}.Release|x64.ActiveCfg = Release|x64
+		{441B9400-DB81-4DCE-968D-C2A96679C7E8}.Release|x64.Build.0 = Release|x64
+		{441B9400-DB81-4DCE-968D-C2A96679C7E8}.Release|x86.ActiveCfg = Release|Win32
+		{441B9400-DB81-4DCE-968D-C2A96679C7E8}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
