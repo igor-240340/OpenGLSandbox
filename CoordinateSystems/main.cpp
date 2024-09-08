@@ -3,26 +3,36 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow* window);
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
+unsigned int cur_width = SCR_WIDTH;
+unsigned int cur_height = SCR_HEIGHT;
+
 const char* vertex_shader_source =
 "#version 330 core\n"
 "layout (location = 0) in vec3 pos;\n"
+"uniform mat4 model;\n"
+"uniform mat4 view;\n"
+"uniform mat4 projection;\n"
 "void main()\n"
 "{\n"
-"   gl_Position = vec4(pos.x, pos.y, pos.z, 1.0);\n"
+"   gl_Position = projection * view * model * vec4(pos, 1.0);\n"
 "}\0";
 
 const char* fragment_shader_source =
 "#version 330 core\n"
-"out vec4 color;\n"
+"out vec4 out_color;\n"
 "void main()\n"
 "{\n"
-"   color = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
+"   out_color = vec4(0.0, 0.0, 0.0, 1.0);\n"
 "}\n\0";
 
 int main() {
@@ -84,39 +94,64 @@ int main() {
     glDeleteShader(fragment_shader);
 
     float vertices[] = {
-         0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,
-        -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,
-         0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f
+         0.5f,  0.5f, 0.0f,
+         0.5f, -0.5f, 0.0f,
+        -0.5f, -0.5f, 0.0f,
+        -0.5f,  0.5f, 0.0f
+    };
+    unsigned int indices[] = {
+        0, 1, 3,
+        1, 2, 3
     };
 
-    unsigned int vbo, vao;
+    unsigned int vbo, vao, ebo;
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
-    // bind the Vertex Array Object first, then bind and set vertex buffer(s), and then configure vertex attributes(s).
+    glGenBuffers(1, &ebo);
+
     glBindVertexArray(vao);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    // color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    glUseProgram(shader_program);
+    glBindVertexArray(0);
 
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     while (!glfwWindowShouldClose(window)) {
         processInput(window);
 
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         // Рисуем.
+        glUseProgram(shader_program);
+
+        glm::mat4 model = glm::mat4(1.0f);
+        glm::mat4 view = glm::mat4(1.0f);
+        glm::mat4 projection = glm::mat4(1.0f);
+        model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+        projection = glm::perspective(glm::radians(45.0f), (float)cur_width / (float)cur_height, 0.1f, 100.0f);
+        
+        unsigned int model_loc = glGetUniformLocation(shader_program, "model");
+        unsigned int view_loc = glGetUniformLocation(shader_program, "view");
+        
+        glUniformMatrix4fv(model_loc, 1, GL_FALSE, glm::value_ptr(model));
+        glUniformMatrix4fv(view_loc, 1, GL_FALSE, &view[0][0]);
+        
+        glUniformMatrix4fv(glGetUniformLocation(shader_program, "projection"), 1, GL_FALSE, &projection[0][0]);
+
+        // render container
         glBindVertexArray(vao);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         glfwPollEvents();
         glfwSwapBuffers(window);
@@ -131,6 +166,8 @@ int main() {
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+    cur_width = width;
+    cur_height = height;
     glViewport(0, 0, width, height);
 }
 
